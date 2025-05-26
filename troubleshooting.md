@@ -1,13 +1,73 @@
 # Troubleshooting
 This guide will help you get started making automated UI tests for the app.
 ## Getting started
+### prerequisites 
 - Install **Node.js** because it's required for Appium.
 - To install Appium open command prompt (cmd) and run: **npm install -g appium**
 - Run also: **appium driver install uiautomator2**
 
+### Making a page ready for testing
+It's really simple to access views found in XAML pages while testing. You just need to add the attribute **AutomationId** to the view you want to access, and then give it a value. There is though naming conventions you have to think of before choosing what the AutomationId of a view should become.
+#### Naming conventions
+- You need to have the full name of the page in the beginning of the AutomationId for every view found in the page, and an underscore after it. Example: **"SomePage_..."**. Though the AutomationId for the page itself should not contain an underscore, but only the page name.
+- After the underscore you can choose a name if you want. Make it preferably hint towards the view's function.
+- After the name, or the underscore if no name was choosen, you have to write the full name of the view type. Example: **"SomePage_AddTemplatedButton"**, "Add" is the name and "TemplatedButton" is the view type in this example.
 ## Create a test Class
 All test classes need to have **[TestClass]** on top of them. They also need to inherit the class **BaseTest**. In the class constructor when also calling the base class constructor (like this: **public SomeTestClass(): base(...)**) there is parameters the base class takes in. Here is the list of them and their explanation:
 
 - **reset**: It's of type bool, and it's obligatory to assign a value to it. Assign false to it if you want the app to fully close and then repopen. Assign true to it if you want the app to reset and reopen.
 - **className**: It's of type string, and it's not obligatory to assign a value to it. Assign the class mame to it (like this: nameof(someClassName)) if you don't want the app to reset/close and reopen before every test method in the class. Assign an empty string to it or leave it to make the app reset/close and reopen before every test method in the class.
 - **skipFirstTestForceReset**: It's of type bool, and it's obligatory to assign a value to it. The first test ignores the reset parameter and a reset happens forcefully. However if you assing true to this parameter, the first test force reset won't happen and the reset variable won't be ignored. Assign false to it or leave to not skip the first test force reset.
+
+## Create a test method
+All test methods need to have **[TestMethod]** and **[TestCategory("Android")]** on top of them. Right now only testing for Android is available, which is why the test category is Android. A test in the MSTest framework succeeds if no error happens, and it fails otherwise. You can make it fail by either throwing an exception (error) normally (like this: throw new Exception("some message")) or using MSTest method Assert.Fail or other MSTest methods like Assert.Equal. We primarly used the normal exception throwing method to make a test fail, but you are free to use the one you want.
+
+## How to find an AppiumElement (view) that can be used in a test method
+
+In this section below you will find a list of methods to find an AppiumElement (view) accessible by having the test class inherit the BaseTest class
+
+Before that some of these methods can only be used after looking at what the AppiumElement one is trying to find contains for attributes, and the value of these attributes. To find all of this information have a temporary test send the value of App.PageSource (when the views you are trying to find information about are on the screen) using either **Console.WriteLine()** or **throw new Exception()**
+
+### AutoFindElement
+This method automatically finds an AppiumElement by it's AutomationId and then returns it, all within the time it's allowed to run for. If it doesn't find the element in the time it's allowed to run for, then it throws an exception (i.e error). Here is a list of the parameters it takes in:
+- **automationId**: Assign the AutomationId of the view you want to find to it.
+- **maxTryTimeInS**: It's of type double, and it's not obligatory to assign a value to it. The default value of it is 20, and this parameter determines how many seconds the method is gonna run for while the view hasn't been found yet. Assign by example 5 to it, if you want the method to run for max 5 seconds.
+
+### ScrollUpOrDownAndFindElement
+This method scrolls up or down based on what you choose, and automatically finds an AppiumElement by the AutomationId you provide to it, and then returns it. If it doesn't find the element after the amount you choose of near screensizes it scrolls up or down, then it throws an exception. Here is a list of the parameters it takes in:
+
+- **automationIDToFind**: It's of type string, and it's obligatory to assign a value to it. Assign the AutomationId of the view you want to find to it.
+- **scrollUpNotDown**: It's of type bool, and it's obligatory to assign a value to it. Assign true to it if you want it to scroll up, and false if you want it to scroll down.
+- **howManyScreenSizesToScroll**: It's of type int, and it's obligatory to assign a value to it. Assign a number of the amount of the almost complete vertical size of the mobile screen it's gonna scroll for to it.
+- **specialActions**: It's of type SpecialActions, and it's not obligatory to assign a value to it. Assign a value to it if you use these methods a lot, and you want them to use the same SpecialActions class, instead of too many SpecialActions classes for no reason.
+- **xPosistionToStartFrom**: It's of type int, and it's not obligatory to assign a value to it. It's default value is 10. The posiont of the left side of the mobile is 0, and this parameter determines how much away horizontally from the let side the scrolling will start from.
+- **xPosistionToStartFrom**: It's of type int, and it's not obligatory to assign a value to it. It's default value is null which later in the method becomes half the screensize vertically. The posiont of the top side of the mobile is 0, and this parameter determines how much away vertically from the top side the scrolling will start from. Assign null to it or leave it if you want the scrolling to start from halv the screen vertically. Assign by example 300 to it if you want the scrolling to start from there vertically.
+
+### FindElementByText
+Don't use this method a lot because depending on the launguage the text will usually change. It takes only one parameter which is the text of the AppiumElement you are trying to find.
+
+### FindElementByTextContaintedInText
+Also don't use this method a lot because depending on the launguage the text will usually change. It takes only one parameter which is text contained in the text of the AppiumElement you are trying to find.
+
+### FindElementByAttribute
+It tries to find an AppiumElement by an attribute and it's value that should be present in the element you are trying to find. By example the attribute **content-desc** and the value **Open navigation drawer**.
+
+### FindElementByTextContainedInAttribute
+
+## How to use an AppiumElement in a test method
+First find an AppiumElement (i.e view) by a method you choose and then you can use it. One of the most usual things you will do with it is clicking it to test navigation. It's done like this: **aButton.Click();**. After clicking it, just use a method to find a view in the next page to test if the navigation was successfull. Down you will aslo find a list of what else you can test, for example an input field(called Entry in .NetMaui).
+
+### WriteInAndTestComplexEntry
+This method writes what you want in an Entry (inputfield of .Net Maui), and at the same time tests if the Entry is working correctly. It throws an Exeption if it isn't working correctly. Here is a list of the parameters it takes in:
+
+- **entryAutomationId**: It's of type string, and it's obligatory to assign a value to it. Assign the AutomationId of the Entry you are testing to it.
+- **whatToWrite**: It's of type string, and it's obligatory to assign a value to it. Assign what you want to be written in the Entry to it.
+- **entry**: It's of type AppiumElement, and it's not obligatory to assign a value to it. The default value is null. Assign null to it or leave it if you don't want the Entry to be clicked (maybe then nothing gets written and the test fails). Assign the Entry to it if you want it to be clicked before text input is sent to the emulator.
+- **actions**: It's of type Actions, and it's not obligatory to assign a value to it. Assign a value to it if you use these methods a lot, and you want them to use the same Actions class, instead of too many Actions classes for no reason.
+
+
+
+
+
+
+
