@@ -1,5 +1,8 @@
 # Troubleshooting
 This guide will help you get started making automated UI tests for the app.
+##
+- [Getting started](#getting-started)
+- [Create a test class](#create-a-test-class)
 ## Getting started
 ### prerequisites 
 - Install **Node.js** because it's required for Appium.
@@ -75,7 +78,14 @@ Sometimes a button is pressed and then another views' text changes. To test if i
 
 ## Other information
 ### How the methods run in MSTest
-In MSTest for every test method in a test class a new copy of the test class is made to run the method. So to have variables that you can use for all methods you have to make them static. Also instead of the constructor which will run once for every test method, use a method 
+In MSTest for every test method in a test class a new copy of the test class is made to run the method. So to have variables that you can use for all methods, that stay the same across tests in the test class unless changed, you have to make them static. 
+Also instead of the constructor which will run once for every test method, use a method with [ClassInitialize] on top of it, and make it also public and static, and give it this parameter: **TestContext context**. This method will run only once before all the tests in the test class. Example of how it can look like:
+
+**[ClassInitialize]**
+
+**public static void ClassInitialize(TestContext context) {**
+
+
 
 
 
