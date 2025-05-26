@@ -12,6 +12,7 @@ It's really simple to access views found in XAML pages while testing. You just n
 - You need to have the full name of the page in the beginning of the AutomationId for every view found in the page, and an underscore after it. Example: **"SomePage_..."**. Though the AutomationId for the page itself should not contain an underscore, but only the page name.
 - After the underscore you can choose a name if you want. Make it preferably hint towards the view's function.
 - After the name, or the underscore if no name was choosen, you have to write the full name of the view type. Example: **"SomePage_AddTemplatedButton"**, "Add" is the name and "TemplatedButton" is the view type in this example.
+
 ## Create a test Class
 All test classes need to have **[TestClass]** on top of them. They also need to inherit the class **BaseTest**. In the class constructor when also calling the base class constructor (like this: **public SomeTestClass(): base(...)**) there is parameters the base class takes in. Here is the list of them and their explanation:
 
@@ -21,6 +22,9 @@ All test classes need to have **[TestClass]** on top of them. They also need to 
 
 ## Create a test method
 All test methods need to have **[TestMethod]** and **[TestCategory("Android")]** on top of them. Right now only testing for Android is available, which is why the test category is Android. A test in the MSTest framework succeeds if no error happens, and it fails otherwise. You can make it fail by either throwing an exception (error) normally (like this: throw new Exception("some message")) or using MSTest method Assert.Fail or other MSTest methods like Assert.AreEqual. We primarly used the normal exception throwing method to make a test fail, but you are free to use the one you want.
+
+## Run a test/tests
+Click on View which is right next to Edit, which is right next to File on the top left of Visual studio after opening the project. After that click on Test Explorer, which will show a window where the available tests are displayed. You can also run a test, all tests or some tests using this window.
 
 ## How to find an AppiumElement (view) that can be used in a test method
 
@@ -44,15 +48,16 @@ This method scrolls up or down based on what you choose, and automatically finds
 - **xPosistionToStartFrom**: It's of type int, and it's not obligatory to assign a value to it. It's default value is null which later in the method becomes half the screensize vertically. The posiont of the top side of the mobile is 0, and this parameter determines how much away vertically from the top side the scrolling will start from. Assign null to it or leave it if you want the scrolling to start from halv the screen vertically. Assign by example 300 to it if you want the scrolling to start from there vertically.
 
 ### FindElementByText
-Don't use this method a lot because depending on the launguage the text will usually change. It takes only one parameter which is the text of the AppiumElement you are trying to find.
+Don't use this method a lot because depending on the launguage the text will usually change. It takes only one parameter which is the text of the AppiumElement you are trying to find. It throws an exception if no element is found.
 
 ### FindElementByTextContaintedInText
-Also don't use this method a lot because depending on the launguage the text will usually change. It takes only one parameter which is text contained in the text of the AppiumElement you are trying to find.
+Also don't use this method a lot because depending on the launguage the text will usually change. It takes only one parameter which is text contained in the text of the AppiumElement you are trying to find.  It throws an exception if no element is found.
 
 ### FindElementByAttribute
-It tries to find an AppiumElement by an attribute and it's value that should be present in the element you are trying to find. By example the attribute **content-desc** and the value **Open navigation drawer**.
+This method tries to find an AppiumElement by an attribute and it's value, that should be present in the element you are trying to find. By example the attribute **content-desc** and the value **Open navigation drawer**, if the the attribute exists in an element and it's value is the value provided then that element is returned by this method. It throws an exception if no element is found.
 
 ### FindElementByTextContainedInAttribute
+This method tries to find a AppiumElement by checking if the attribute and it's value provided to this method, is present in an AppiumElement that is currently on the screen. It throws an exception if no element is found.
 
 ## How to use an AppiumElement in a test method
 First find an AppiumElement (i.e view) by a method you choose and then you can use it. One of the most usual things you will do with it is clicking it to test navigation. It's done like this: **aButton.Click();**. After clicking it, just use a method to find a view in the next page to test if the navigation was successfull. Down you will aslo find a list of what else you can test, for example an input field(called Entry in .NetMaui).
@@ -64,6 +69,14 @@ This method writes what you want in an Entry (inputfield of .Net Maui), and at t
 - **whatToWrite**: It's of type string, and it's obligatory to assign a value to it. Assign what you want to be written in the Entry to it.
 - **entry**: It's of type AppiumElement, and it's not obligatory to assign a value to it. The default value is null. Assign null to it or leave it if you don't want the Entry to be clicked (maybe then nothing gets written and the test fails). Assign the Entry to it if you want it to be clicked before text input is sent to the emulator.
 - **actions**: It's of type Actions, and it's not obligatory to assign a value to it. Assign a value to it if you use these methods a lot, and you want them to use the same Actions class, instead of too many Actions classes for no reason.
+
+### Testing if a view's text changed
+Sometimes a button is pressed and then another views' text changes. To test if it actually changed, first before pressing the button get the view's text. Which you do by first finding it with a method, and then getting it's text value by doing this: **string text = aView.GetAttribute("text");**. Then after pressing the button get the text value again and compare it with the earlier one.
+
+## Other information
+### How the methods run in MSTest
+In MSTest for every test method in a test class a new copy of the test class is made to run the method. So to have variables that you can use for all methods you have to make them static. Also instead of the constructor which will run once for every test method, use a method 
+
 
 
 
