@@ -1,8 +1,26 @@
 # Troubleshooting
 This guide will help you get started making automated UI tests for the app.
 ##
+- [Troubleshooting](#troubleshooting)
 - [Getting started](#getting-started)
-- [Create a test class](#create-a-test-class)
+  - [prerequisites](#prerequisites)
+  - [Making a page ready for testing](#making-a-page-ready-for-testing)
+    - [Naming conventions](#naming-conventions)
+- [Create a test Class](#create-a-test-class)
+- [Create a test method](#create-a-test-method)
+- [Run a test/tests](#run-a-testtests)
+- [How to find an AppiumElement (view) that can be used in a test method](#how-to-find-an-appiumelement-view-that-can-be-used-in-a-test-method)
+  - [AutoFindElement](#autofindelement)
+  - [ScrollUpOrDownAndFindElement](#scrollupordownandfindelement)
+  - [FindElementByText](#findelementbytext)
+  - [FindElementByTextContaintedInText](#findelementbytextcontaintedintext)
+  - [FindElementByAttribute](#findelementbyattribute)
+  - [FindElementByTextContainedInAttribute](#findelementbytextcontainedinattribute)
+- [How to use an AppiumElement in a test method](#how-to-use-an-appiumelement-in-a-test-method)
+  - [WriteInAndTestComplexEntry](#writeinandtestcomplexentry)
+  - [Testing if a view's text changed](#testing-if-a-views-text-changed)
+- [Other information](#other-information)
+  - [How the methods run in MSTest](#how-the-methods-run-in-mstest)
 ## Getting started
 ### prerequisites 
 - Install **Node.js** because it's required for Appium.
