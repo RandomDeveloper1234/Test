@@ -20,7 +20,7 @@ All test classes need to have **[TestClass]** on top of them. They also need to 
 - **skipFirstTestForceReset**: It's of type bool, and it's obligatory to assign a value to it. The first test ignores the reset parameter and a reset happens forcefully. However if you assing true to this parameter, the first test force reset won't happen and the reset variable won't be ignored. Assign false to it or leave to not skip the first test force reset.
 
 ## Create a test method
-All test methods need to have **[TestMethod]** and **[TestCategory("Android")]** on top of them. Right now only testing for Android is available, which is why the test category is Android. A test in the MSTest framework succeeds if no error happens, and it fails otherwise. You can make it fail by either throwing an exception (error) normally (like this: throw new Exception("some message")) or using MSTest method Assert.Fail or other MSTest methods like Assert.Equal. We primarly used the normal exception throwing method to make a test fail, but you are free to use the one you want.
+All test methods need to have **[TestMethod]** and **[TestCategory("Android")]** on top of them. Right now only testing for Android is available, which is why the test category is Android. A test in the MSTest framework succeeds if no error happens, and it fails otherwise. You can make it fail by either throwing an exception (error) normally (like this: throw new Exception("some message")) or using MSTest method Assert.Fail or other MSTest methods like Assert.AreEqual. We primarly used the normal exception throwing method to make a test fail, but you are free to use the one you want.
 
 ## How to find an AppiumElement (view) that can be used in a test method
 
