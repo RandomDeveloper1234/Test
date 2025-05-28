@@ -26,7 +26,8 @@ This guide will help you get started making automated UI tests for the app.
 - Install **Node.js** because it's required for Appium.
 - To install Appium open command prompt (cmd) and run: **npm install -g appium**
 - Run also: **appium driver install uiautomator2**
-
+### Where to find the test project 
+Go to the branch **ui-testing**. After that click on **Solution Files** in the solution explorer, and there you will find the project **NeuroAccess.UiTests.Shared**.
 ### Making a page ready for testing
 It's really simple to access views found in XAML pages while testing. You just need to add the attribute **AutomationId** to the view you want to access, and then give it a value. There is though naming conventions you have to think of before choosing what the AutomationId of a view should become.
 #### Naming conventions
@@ -102,6 +103,29 @@ Also instead of the constructor which will run once for every test method, use a
 **[ClassInitialize]**
 
 **public static void ClassInitialize(TestContext context) {**
+### Usual errors that happen
+#### 1) The view cannot be found even though it has an AutomationId
+When adding new AutomationIds to the project, you need to run the app normally again, and then take the updated app in the files, copy it, and then replace the app with the new version in the test project. 
+The detailed explanation is like this:
+- Run the app and then close it.
+- In the file explorer, go to this file path: **"C:\My Projects\NeuroAccessMaui\NeuroAccessMaui\bin\Debug\net8.0-android"**.
+- Copy these three files at the same time: 1(**com.tag.NeuroAccess.apk**), 2(**com.tag.NeuroAccess-Signed.apk**), 3(**com.tag.NeuroAccess-Signed.apk.idsig**).
+- Got to this file path: **"C:\My Projects\NeuroAccessMaui\NeuroAccess.UiTests.Android\bin\Debug\net8.0"**.
+- Replace the files with the same name as the files from before, with the copy of the files of before. Also delete other files that start with: "com.tag.NeuroAccess".
+- Now it should work correctly and the view should be able to be found now!
+
+#### 2) Error happens for weird reason before the test even actually begginning
+Sometimes after closing a running test midway, launching a test next time will result in an error. You can just ignore this error, and when launching again it should work just fine.
+
+#### 3) The button isn't becoming pressable
+Sometimes using the method the AppiumElement method called sendkeys, a button that should have became pessable doesn't become pressable. So Instead use this the senkeys method from the Actions class. 
+It looks like this: 
+
+**Actions actions = new Actions(App);**
+
+**actions.SendKeys(whatToWrite).Perform();**
+
+Or just use the **WriteInEmulator** method found in BaseTest, that is in itseld using the sendkeys method from the Actions class.
 
 
 
